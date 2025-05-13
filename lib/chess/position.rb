@@ -50,8 +50,14 @@ module Chess
 
     # @return [Array<Position>] all positions on the board
     def self.all
-      (0..7).flat_map do |row|
-        (0..7).map { |col| new(row, col) }
+      @all_positions ||= begin
+        positions = []
+        8.times do |row|
+          8.times do |col|
+            positions << new(row, col)
+          end
+        end
+        positions
       end
     end
   end

@@ -10,8 +10,10 @@ module Chess
         white? ? '♘' : '♞'
       end
 
-      def valid_moves(board)
+      def valid_moves(board, skip_validation = false)
         moves = []
+        return moves unless @position.valid?
+
         # All possible L-shaped moves
         offsets = [
           [-2, -1], [-2, 1], [-1, -2], [-1, 2],
@@ -28,7 +30,7 @@ module Chess
           end
         end
 
-        moves
+        super(board, skip_validation)
       end
     end
   end

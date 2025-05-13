@@ -10,12 +10,14 @@ module Chess
         white? ? '♕' : '♛'
       end
 
-      def valid_moves(board)
+      def valid_moves(board, skip_validation = false)
         moves = []
-        # Queen moves like both rook and bishop
+        return moves unless @position.valid?
+
+        # Check all eight directions (horizontal, vertical, and diagonal)
         directions = [
-          [0, 1], [0, -1], [1, 0], [-1, 0],  # rook directions
-          [1, 1], [1, -1], [-1, 1], [-1, -1]  # bishop directions
+          [0, 1], [0, -1], [1, 0], [-1, 0],  # horizontal and vertical
+          [1, 1], [1, -1], [-1, 1], [-1, -1]  # diagonal
         ]
 
         directions.each do |row_dir, col_dir|
@@ -39,7 +41,7 @@ module Chess
           end
         end
 
-        moves
+        super(board, skip_validation)
       end
     end
   end

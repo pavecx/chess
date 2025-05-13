@@ -10,11 +10,15 @@ module Chess
         white? ? '♗' : '♝'
       end
 
-      def valid_moves(board)
+      # @param board [Board] the current board state
+      # @param skip_validation [Boolean] if true, skips check validation to prevent infinite recursion
+      # @return [Array<Position>] array of valid positions the bishop can move to
+      def valid_moves(board, skip_validation = false)
         moves = []
-        directions = [[1, 1], [1, -1], [-1, 1], [-1, -1]] # diagonal directions
+        return moves unless @position.valid?
 
-        directions.each do |row_dir, col_dir|
+        # Check all four diagonal directions
+        [[1, 1], [1, -1], [-1, 1], [-1, -1]].each do |row_dir, col_dir|
           current_row = @position.row + row_dir
           current_col = @position.col + col_dir
 
@@ -35,7 +39,7 @@ module Chess
           end
         end
 
-        moves
+        super(board, skip_validation)
       end
     end
   end

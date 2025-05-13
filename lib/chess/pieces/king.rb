@@ -10,7 +10,7 @@ module Chess
         white? ? '♔' : '♚'
       end
 
-      def valid_moves(board)
+      def valid_moves(board, skip_validation = false)
         moves = []
         # Regular king moves (one square in any direction)
         directions = [
@@ -29,36 +29,16 @@ module Chess
         end
 
         # Add castling moves if conditions are met
-        moves.concat(castling_moves(board)) if can_castle?(board)
+        moves.concat(castling_moves(board)) unless skip_validation
 
         moves
       end
 
       private
 
-      def can_castle?(board)
-        return false if @moved || board.in_check?
-
-        # Check if king is in check or would move through check
-        !@moved && !board.in_check? && !would_move_through_check?(board)
-      end
-
-      def would_move_through_check?(board)
-        # Check if any squares between king and rook are under attack
-        [-1, 1].any? do |direction|
-          current_col = @position.col + direction
-          while current_col.between?(0, 7)
-            current_pos = Position.new(@position.row, current_col)
-            return true if board.square_under_attack?(current_pos, @color == :white ? :black : :white)
-            current_col += direction
-          end
-        end
-        false
-      end
-
       def castling_moves(board)
         moves = []
-        return moves if @moved || board.in_check?
+        return moves if @moved || board.in_check?(true)
 
         # Check kingside castling
         if can_castle_kingside?(board)
@@ -76,22 +56,24 @@ module Chess
       def can_castle_kingside?(board)
         rook_pos = Position.new(@position.row, 7)
         rook = board.piece_at(rook_pos)
-        return false unless rook.is_a?(Rook) && !rook.moved
+        return false unless rook.is_a?(Chess::Pieces::Rook) && !rook.moved? && rook.color == @color
 
-        # Check if squares between king and rook are empty
+        # Check if squares between king and rook are empty and not under attack
         (@position.col + 1..6).all? do |col|
-          board.empty?(Position.new(@position.row, col))
+          pos = Position.new(@position.row, col)
+          board.empty?(pos) && !board.square_under_attack?(pos, @color == :white ? :black : :white)
         end
       end
 
       def can_castle_queenside?(board)
         rook_pos = Position.new(@position.row, 0)
         rook = board.piece_at(rook_pos)
-        return false unless rook.is_a?(Rook) && !rook.moved
+        return false unless rook.is_a?(Chess::Pieces::Rook) && !rook.moved? && rook.color == @color
 
-        # Check if squares between king and rook are empty
+        # Check if squares between king and rook are empty and not under attack
         (1..@position.col - 1).all? do |col|
-          board.empty?(Position.new(@position.row, col))
+          pos = Position.new(@position.row, col)
+          board.empty?(pos) && !board.square_under_attack?(pos, @color == :white ? :black : :white)
         end
       end
     end
