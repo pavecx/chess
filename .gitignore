@@ -1,3 +1,4 @@
+# Ruby specific
 *.gem
 *.rbc
 /.config
@@ -9,6 +10,38 @@
 /test/tmp/
 /test/version_tmp/
 /tmp/
+
+# Ignore all logfiles and tempfiles from /log/ and /tmp/
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+
+# Ignore save files
+chess_save_*.yaml
+
+# Ignore bundler config
+/.bundle/
+
+# Ignore all local .ruby-version files
+.ruby-version
+
+# Ignore RSpec failure examples
+.rspec_status
+
+# Ignore Mac files
+.DS_Store
+
+# Ignore editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Ignore environment files
+.env
+.env.*
 
 # Used by dotenv library to load environment variables.
 # .env
@@ -39,7 +72,6 @@ build-iPhoneSimulator/
 /rdoc/
 
 ## Environment normalization:
-/.bundle/
 /vendor/bundle
 /lib/bundler/man/
 

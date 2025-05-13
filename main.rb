@@ -1,5 +1,5 @@
-# frozen_string_literal:true
+# frozen_string_literal: true
 
-load 'board.rb'
+require_relative 'lib/chess/game'
 
-Board.new
+Chess::Game.new.play
